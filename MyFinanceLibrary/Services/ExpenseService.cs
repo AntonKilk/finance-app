@@ -7,26 +7,26 @@ namespace MyFinanceLibrary.Services
 {
     public class ExpenseService : IExpenseService
     {
-        MyFinanceContext _db;
+        MyFinanceContext _context;
         public ExpenseService(MyFinanceContext context)
         {
-            _db = context;
+            _context = context;
         }
 
         public async Task<List<ExpenseType>> GetExpenseTypes()
         {
-            return await _db.ExpenseTypes.ToListAsync();
+            return await _context.ExpenseTypes.ToListAsync();
         }
 
-        public async Task<ExpenseType> GetExpenseType(int id)
+        public async Task<ExpenseType?> GetExpenseType(int id)
         {
-            return await _db.ExpenseTypes.FindAsync(id);
+            return await _context.ExpenseTypes.FindAsync(id);
         }
 
         public async Task<ExpenseType> CreateExpenseType(ExpenseType expenseType)
         {
-            _db.ExpenseTypes.Add(expenseType);
-            await _db.SaveChangesAsync();
+            _context.ExpenseTypes.Add(expenseType);
+            await _context.SaveChangesAsync();
 
             return expenseType;
         }
@@ -38,11 +38,11 @@ namespace MyFinanceLibrary.Services
                 return false;
             }
 
-            _db.Entry(expenseType).State = EntityState.Modified;
+            _context.Entry(expenseType).State = EntityState.Modified;
 
             try
             {
-                await _db.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -61,20 +61,21 @@ namespace MyFinanceLibrary.Services
 
         public async Task<bool> DeleteExpenseType(int id)
         {
-            var expenseType = await _db.ExpenseTypes.FindAsync(id);
+            var expenseType = await _context.ExpenseTypes.FindAsync(id);
 
             if (expenseType == null)
             {
                 return false;
             }
-            _db.ExpenseTypes.Remove(expenseType);
-            await _db.SaveChangesAsync();
+            _context.ExpenseTypes.Remove(expenseType);
+            await _context.SaveChangesAsync();
 
             return true;
         }
+
         private bool ExpenseTypeExists(int id)
         {
-            return _db.ExpenseTypes.Any(e => e.ID == id);
+            return _context.ExpenseTypes.Any(e => e.ID == id);
         }
     }
 }

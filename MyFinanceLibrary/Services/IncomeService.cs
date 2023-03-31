@@ -19,7 +19,7 @@ namespace MyFinanceLibrary.Services
             return await _context.IncomeTypes.ToListAsync();
         }
 
-        public async Task<IncomeType> GetIncomeType(int id)
+        public async Task<IncomeType?> GetIncomeType(int id)
         {
             return await _context.IncomeTypes.FindAsync(id);
         }

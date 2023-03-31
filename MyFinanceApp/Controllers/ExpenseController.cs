@@ -66,6 +66,5 @@ namespace MyFinanceApp.Controllers
 
             return NoContent();
         }
-
     }
 }

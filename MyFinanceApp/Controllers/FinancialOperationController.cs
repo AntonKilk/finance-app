@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyFinanceLibrary.Data;
 using MyFinanceLibrary.Models;
+using MyFinanceLibrary.Services.Interfaces;
 
 namespace MyFinanceApp.Controllers
 {
@@ -9,88 +10,62 @@ namespace MyFinanceApp.Controllers
     [Route("[controller]")]
     public class FinancialOperationController : Controller
     {
-        private readonly MyFinanceContext _context;
+        IFinancialOperationService _financialOp;
 
-        public FinancialOperationController(MyFinanceContext context)
+        public FinancialOperationController(IFinancialOperationService financialOp)
         {
-            _context = context;
+            _financialOp = financialOp;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FinancialOperation>>> GetFinancialOperations()
         {
-            return await _context.FinancialOperations.ToListAsync();
+            return await _financialOp.GetFinancialOperations();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<FinancialOperation>> GetFinancialOperation(int id)
         {
-            var financialOperation = await _context.FinancialOperations.FindAsync(id);
+            var financialOp = await _financialOp.GetFinancialOperation(id);
 
-            if (financialOperation == null)
+            if (financialOp == null)
             {
                 return NotFound();
             }
 
-            return financialOperation;
+            return financialOp;
         }
 
         [HttpPost]
-        public async Task<ActionResult<FinancialOperation>> CreateFinancialOperation(FinancialOperation financialOperation)
+        public async Task<ActionResult<FinancialOperation>> CreateFinancialOperation(FinancialOperation financialOp)
         {
-            _context.FinancialOperations.Add(financialOperation);
-            await _context.SaveChangesAsync();
+            var createdFinancialOp = await _financialOp.CreateFinancialOperation(financialOp);
 
-            return CreatedAtAction(nameof(GetFinancialOperation), new { id = financialOperation.ID }, financialOperation);
+            return CreatedAtAction(nameof(GetFinancialOperation), new { id = financialOp.ID }, financialOp);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateFinancialOperation(int id, FinancialOperation financialOperation)
         {
-            if (id != financialOperation.ID)
+            bool success = await _financialOp.UpdateFinancialOperation(id, financialOperation);
+            if (!success)
             {
                 return BadRequest();
             }
-
-            _context.Entry(financialOperation).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FinancialOperationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+         
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFinancialOperation(int id)
         {
-            var financialOperation = await _context.FinancialOperations.FindAsync(id);
-            if (financialOperation == null)
+            bool success = await _financialOp.DeleteFinancialOperation(id);
+            if (!success)
             {
                 return NotFound();
             }
 
-            _context.FinancialOperations.Remove(financialOperation);
-            await _context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        private bool FinancialOperationExists(int id)
-        {
-            return _context.FinancialOperations.Any(e => e.ID == id);
         }
     }
 }

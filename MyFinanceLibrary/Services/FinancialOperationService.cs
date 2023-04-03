@@ -15,7 +15,8 @@ namespace MyFinanceLibrary.Services
 
         public async Task<List<FinancialOperation>> GetFinancialOperations()
         {
-            return await _context.FinancialOperations.ToListAsync();
+            var financialOperatios = await _context.FinancialOperations.Where(x => x.IsDel == false).ToListAsync();
+            return financialOperatios;
         }
 
         public async Task<FinancialOperation?> GetFinancialOperation(int id)
@@ -67,7 +68,7 @@ namespace MyFinanceLibrary.Services
                 return false;
             }
 
-            _context.FinancialOperations.Remove(financialOperation);
+            financialOperation.IsDel = true;
             await _context.SaveChangesAsync();
             return true;
         }

@@ -9,8 +9,7 @@ string connection = builder.Configuration.GetConnectionString("DefaultConnection
 
 builder.Services.AddDbContext<MyFinanceContext>(options => options.UseSqlServer(connection));
 // Add services to the container.
-builder.Services.AddScoped<IExpenseService, ExpenseService>();
-builder.Services.AddScoped<IIncomeService, IncomeService>();
+builder.Services.AddScoped<IOperationTypeService, OperationTypeService>();
 builder.Services.AddScoped<IFinancialOperationService, FinancialOperationService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddControllers();

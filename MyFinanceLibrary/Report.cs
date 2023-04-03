@@ -1,5 +1,6 @@
-﻿
-namespace MyFinanceLibrary.Models
+﻿using MyFinanceLibrary.Models;
+
+namespace MyFinanceLibrary
 {
     public class Report
     {

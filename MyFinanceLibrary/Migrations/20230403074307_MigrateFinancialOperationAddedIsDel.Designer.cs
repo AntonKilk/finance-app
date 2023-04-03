@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyFinanceLibrary.Data;
 
@@ -11,9 +12,11 @@ using MyFinanceLibrary.Data;
 namespace MyFinanceLibrary.Migrations
 {
     [DbContext(typeof(MyFinanceContext))]
-    partial class MyFinanceContextModelSnapshot : ModelSnapshot
+    [Migration("20230403074307_MigrateFinancialOperationAddedIsDel")]
+    partial class MigrateFinancialOperationAddedIsDel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MyFinanceLibrary.Models;
+using MyFinanceLibrary;
 using MyFinanceLibrary.Services.Interfaces;
 
 namespace MyFinanceApp.Controllers

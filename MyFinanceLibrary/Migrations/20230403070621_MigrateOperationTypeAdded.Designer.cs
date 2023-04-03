@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyFinanceLibrary.Data;
 
@@ -11,9 +12,11 @@ using MyFinanceLibrary.Data;
 namespace MyFinanceLibrary.Migrations
 {
     [DbContext(typeof(MyFinanceContext))]
-    partial class MyFinanceContextModelSnapshot : ModelSnapshot
+    [Migration("20230403070621_MigrateOperationTypeAdded")]
+    partial class MigrateOperationTypeAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,9 +42,6 @@ namespace MyFinanceLibrary.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsDel")
-                        .HasColumnType("bit");
-
                     b.Property<int>("OperationTypeID")
                         .HasColumnType("int");
 
@@ -56,7 +56,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = 10000m,
                             Comment = "Salary March",
                             Date = new DateTime(2023, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 1
                         },
                         new
@@ -65,7 +64,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = 1000m,
                             Comment = "Birthday gift",
                             Date = new DateTime(2023, 3, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 2
                         },
                         new
@@ -74,7 +72,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = 100m,
                             Comment = "Tesla shares",
                             Date = new DateTime(2023, 3, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 3
                         },
                         new
@@ -83,7 +80,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = 10m,
                             Comment = "bonus1",
                             Date = new DateTime(2023, 3, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 4
                         },
                         new
@@ -92,7 +88,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = 1m,
                             Comment = "Rental income",
                             Date = new DateTime(2023, 3, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 5
                         },
                         new
@@ -101,7 +96,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = 10000m,
                             Comment = "Another gift",
                             Date = new DateTime(2023, 3, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 1
                         },
                         new
@@ -110,7 +104,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = 1000m,
                             Comment = "Microsoft shares",
                             Date = new DateTime(2023, 3, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 2
                         },
                         new
@@ -119,7 +112,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = 100m,
                             Comment = "more money",
                             Date = new DateTime(2023, 3, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 3
                         },
                         new
@@ -128,7 +120,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = 10m,
                             Comment = "bonus2",
                             Date = new DateTime(2023, 3, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 4
                         },
                         new
@@ -137,7 +128,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = 1m,
                             Comment = "additional income",
                             Date = new DateTime(2023, 3, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 5
                         },
                         new
@@ -146,7 +136,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = -1000m,
                             Comment = "grocery1",
                             Date = new DateTime(2023, 3, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 6
                         },
                         new
@@ -155,7 +144,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = -100m,
                             Comment = "gasoline1",
                             Date = new DateTime(2023, 3, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 7
                         },
                         new
@@ -164,7 +152,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = -10m,
                             Comment = "rental1",
                             Date = new DateTime(2023, 3, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 8
                         },
                         new
@@ -173,7 +160,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = -1m,
                             Comment = "kids clothing",
                             Date = new DateTime(2023, 3, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 9
                         },
                         new
@@ -182,7 +168,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = -1000m,
                             Comment = "shopping1",
                             Date = new DateTime(2023, 3, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 10
                         },
                         new
@@ -191,7 +176,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = -100m,
                             Comment = "grocery1",
                             Date = new DateTime(2023, 3, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 6
                         },
                         new
@@ -200,7 +184,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = -10m,
                             Comment = "bus",
                             Date = new DateTime(2023, 3, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 7
                         },
                         new
@@ -209,7 +192,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = -1m,
                             Comment = "rental1",
                             Date = new DateTime(2023, 3, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 8
                         },
                         new
@@ -218,7 +200,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = -1000m,
                             Comment = "H&M",
                             Date = new DateTime(2023, 3, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 9
                         },
                         new
@@ -227,7 +208,6 @@ namespace MyFinanceLibrary.Migrations
                             Amount = -100m,
                             Comment = "shopping2",
                             Date = new DateTime(2023, 3, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDel = false,
                             OperationTypeID = 10
                         });
                 });

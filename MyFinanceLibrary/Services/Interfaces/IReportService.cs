@@ -1,6 +1,4 @@
-﻿using MyFinanceLibrary.Models;
-
-namespace MyFinanceLibrary.Services.Interfaces
+﻿namespace MyFinanceLibrary.Services.Interfaces
 {
     public interface IReportService
     {

@@ -17,7 +17,7 @@ namespace MyFinanceApp.Controllers
         }
 
         [HttpGet("daily")]
-        public async Task<ActionResult<Report>> GetDailyReport(DateTime date)
+        public async Task<ActionResult<Report>> GetDailyReport([FromQuery] DateTime date)
         {
            var report = await _reportService.GetDailyReport(date);
 
@@ -25,7 +25,7 @@ namespace MyFinanceApp.Controllers
         }
 
         [HttpGet("period")]
-        public async Task<ActionResult<Report>> GetPeriodReport(DateTime startDate, DateTime endDate)
+        public async Task<ActionResult<Report>> GetPeriodReport([FromQuery]DateTime startDate, [FromQuery]DateTime endDate)
         {
             var report = await _reportService.GetPeriodReport(startDate, endDate);
 

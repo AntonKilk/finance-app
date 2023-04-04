@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MyFinanceLibrary.Data;
 using MyFinanceLibrary.Models;
 using MyFinanceLibrary.Services.Interfaces;
 

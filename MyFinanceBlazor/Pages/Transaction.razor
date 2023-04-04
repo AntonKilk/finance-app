@@ -1,0 +1,124 @@
+﻿@page "/transaction"
+
+@using MyFinanceLibrary
+@using MyFinanceLibrary.Models
+@using MyFinanceLibrary.Services.Interfaces
+
+@inject IFinancialOperationService _service;
+
+<h1>Transactions</h1>
+
+@if (financialOperations == null)
+{
+    <p>Loading financial operations...</p>
+}
+else if (financialOperations.Count == 0)
+{
+    <p>No financial operations found.</p>
+}
+else
+{
+        <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var op in financialOperations)
+            {
+                <tr>
+                    <td>@op.Date.ToShortDateString()</td>
+                    <td>@op.Comment</td>
+                    <td>@op.Amount.ToString("C")</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => EditFinancialOperation(op)">Edit</button>
+                        <button class="btn btn-primary" @onclick="() => DeleteFinancialOperation(op.ID)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div>
+    <h2>Add new transaction</h2>
+    <form>
+        <label>Date:</label>
+        <input class="form-control" type="date" @bind-value="@newFinancialOperation.Date" />
+        <br />
+        <label>Description:</label>
+        <input class="form-control" type="text" @bind-value="@newFinancialOperation.Comment" />
+        <br />
+        <label>Amount:</label>
+        <input class="form-control" type="number" step="0.01" @bind-value="@newFinancialOperation.Amount" />
+        <br />
+        <button class="btn btn-primary" @onclick="AddFinancialOperation">Add</button>
+    </form>
+</div>
+
+<div>
+    <h2>Edit Financial Operation</h2>
+    <form>
+        <label>Date:</label>
+        <input class="form-control" type="date" @bind-value="@editFinancialOperation.Date" />
+        <br />
+        <label>Description:</label>
+        <input class="form-control" type="text" @bind-value="@editFinancialOperation.Comment" />
+        <br />
+        <label>Amount:</label>
+        <input class="form-control" type="number" step="0.01" @bind-value="@editFinancialOperation.Amount" />
+        <br />
+        <button class="btn btn-primary" @onclick="UpdateFinancialOperation">Save</button>
+        <button class="btn btn-primary" @onclick="CancelEditFinancialOperation">Cancel</button>
+    </form>
+</div>
+
+@code {
+    List<FinancialOperation>? financialOperations;
+    FinancialOperation newFinancialOperation = new FinancialOperation();
+    FinancialOperation editFinancialOperation = new FinancialOperation();
+
+    protected override async Task OnInitializedAsync()
+    {
+        financialOperations = await _service.GetFinancialOperations();
+    }
+    
+    async Task AddFinancialOperation()
+    {
+        await _service.CreateFinancialOperation(newFinancialOperation);
+        financialOperations = await _service.GetFinancialOperations();
+        newFinancialOperation = new FinancialOperation();
+    }
+
+    void EditFinancialOperation(FinancialOperation op)
+    {
+        editFinancialOperation = op;
+    }
+
+    async Task UpdateFinancialOperation()
+    {
+        int id = editFinancialOperation.ID;
+        await _service.UpdateFinancialOperation(id, editFinancialOperation);
+        financialOperations = await _service.GetFinancialOperations();
+        editFinancialOperation = null;
+    }
+
+    void CancelEditFinancialOperation()
+    {
+        editFinancialOperation = null;
+    }
+
+    async Task DeleteFinancialOperation(int id)
+    {
+        var operationToDelete = financialOperations.FirstOrDefault(op => op.ID == id);
+        if (operationToDelete != null)
+        {
+            await _service.DeleteFinancialOperation(id);
+            financialOperations = await _service.GetFinancialOperations();
+        }
+    }
+}

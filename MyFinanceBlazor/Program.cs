@@ -1,7 +1,4 @@
 using MyFinanceBlazor.Data;
-using MyFinanceLibrary.Data;
-using MyFinanceLibrary.Services.Interfaces;
-using MyFinanceLibrary.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,11 +8,6 @@ string connection = builder.Configuration.GetConnectionString("DefaultConnection
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
-
-builder.Services.AddDbContext<MyFinanceContext>(options => options.UseSqlServer(connection));
-builder.Services.AddScoped<IOperationTypeService, OperationTypeService>();
-builder.Services.AddScoped<IFinancialOperationService, FinancialOperationService>();
-builder.Services.AddScoped<IReportService, ReportService>();
 
 var app = builder.Build();
 

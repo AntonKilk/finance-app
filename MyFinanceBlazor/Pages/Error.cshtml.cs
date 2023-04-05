@@ -24,4 +24,6 @@ namespace MyFinanceBlazor.Pages
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
         }
     }
+
+
 }

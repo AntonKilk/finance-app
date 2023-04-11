@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyFinanceApp", "MyFinanceAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyFinanceLibrary", "MyFinanceLibrary\MyFinanceLibrary.csproj", "{7B177907-2F57-40F6-88C5-43338D3070B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyFinanceBlazor", "MyFinanceBlazor\MyFinanceBlazor.csproj", "{3EDA3C61-82F2-41DF-AA18-8CE7C2B8122D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyFinanceBlazor", "MyFinanceBlazor\MyFinanceBlazor.csproj", "{3EDA3C61-82F2-41DF-AA18-8CE7C2B8122D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

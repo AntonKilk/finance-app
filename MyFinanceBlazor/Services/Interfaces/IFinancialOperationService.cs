@@ -8,6 +8,6 @@ namespace MyFinanceBlazor.Services.Interfaces
         Task<FinancialOperation> GetOperation(int id);
         Task<FinancialOperation> AddOperation(FinancialOperation operation);
         Task DeleteOperation(int id);
-        Task<FinancialOperation> UpdateOperation(int id, FinancialOperation operation);
+        Task UpdateOperation(FinancialOperation operation);
     }
 }

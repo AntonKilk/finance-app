@@ -6,6 +6,23 @@
 
 <h1>Transactions</h1>
 
+<div>
+    <h2>Add new transaction</h2>
+    <form>
+        <label>Date:</label>
+        <input class="form-control" type="date" @bind-value="addDate" />
+        <br />
+        <label>Comment:</label>
+        <input class="form-control" type="text" @bind-value="addComment" />
+        <br />
+        <label>Amount:</label>
+        <input class="form-control" type="number" step="0.01" @bind-value="addAmount" />
+        <br />
+        <button class="btn btn-primary" @onclick="() => AddFinancialOperation(addDate, addComment, addAmount)">Add</button>
+        <button class="btn btn-primary" @onclick="RefreshList">Refresh List</button>
+    </form>
+</div>
+
 @if (finOperations == null)
 {
     <p>Loading...</p>
@@ -28,64 +45,106 @@ else
                     <td>@op.Date.ToString()</td>
                     <td>@op.Comment</td>
                     <td>@op.Amount.ToString()</td>
-                   @* <td>
-                <button class="btn btn-primary" @onclick="() => EditFinancialOperation(op)">Edit</button>
-                <butn class="btn btn-primary" @onclick="() => DeleteFinancialOperation(op.ID)">Delete</button>
-                </td>*@
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => EditFinancialOperation(op.ID, op)">Edit</button>
+                        <button class="btn btn-primary" @onclick="() => DeleteFinancialOperation(op.ID)">Delete</button>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
 
-    <div>
-        <h2>Add new transaction</h2>
+
+    @if (editFinOperation != null)
+    {
+        <h2>Edit Financial Operation</h2>
+
         <form>
-            <label>Date:</label>
-            <input class="form-control" type="date" @bind-value="@newFinOperation.Date" />
-            <br />
-            <label>Comment:</label>
-            <input class="form-control" type="text" @bind-value="@newFinOperation.Comment" />
-            <br />
-            <label>Amount:</label>
-            <input class="form-control" type="number" step="0.01" @bind-value="@newFinOperation.Amount" />
-            <br />
-            <button class="btn btn-primary" @onclick="AddFinancialOperation">Add</button>
+            <div class="form-group">
+                <label for="editDateInput">Date</label>
+                <input id="editDateInput" class="form-control" type="date" @bind-value="editDate" />
+            </div>
+            <div class="form-group">
+                <label for="editDescriptionInput">Description</label>
+                <input id="editDescriptionInput" class="form-control" type="text" @bind-value="editComment" />
+            </div>
+            <div class="form-group">
+                <label for="editAmountInput">Amount</label>
+                <input id="editAmountInput" class="form-control" type="number" step="0.01" @bind-value="editAmount" />
+            </div>
+            <button class="btn btn-primary" type="button" @onclick="() => UpdateFinancialOperation(editFinOperation.ID, editDate, editComment, editAmount)">Save</button>
+            <button class="btn btn-secondary" type="button" @onclick="CancelEditFinancialOperation">Cancel</button>
         </form>
-    </div>
+    }
 }
 
-@*<div>
-    <h2>Edit Financial Operation</h2>
-    <form>
-        <label>Date:</label>
-        <input class="form-control" type="date" @bind-value="@editFinancialOperation.Date" />
-        <br />
-        <label>Comment:</label>
-        <input class="form-control" type="text" @bind-value="@editFinancialOperation.Comment" />
-        <br />
-        <label>Amount:</label>
-        <input class="form-control" type="number" step="0.01" @bind-value="@editFinancialOperation.Amount" />
-        <br />
-        <button class="btn btn-primary" @onclick="UpdateFinancialOperation">Save</button>
-        <button class="btn btn-primary" @onclick="CancelEditFinancialOperation">Cancel</button>
-    </form>
-</div>*@
-
 @code {
-    List<FinancialOperation> finOperations;
+
+    static HttpClient client = new HttpClient();
+    FinancialOperationService financialService = new FinancialOperationService(new MyHttpService(client));
+    List<FinancialOperation>? finOperations;
     FinancialOperation newFinOperation = new FinancialOperation();
-    FinancialOperationService financialService;
-    HttpClient client = new HttpClient();
+    FinancialOperation? editFinOperation;
+    private DateTime addDate = DateTime.Today;
+    private string? addComment;
+    private decimal addAmount;
+    private DateTime editDate;
+    private string? editComment;
+    private decimal editAmount;
 
     protected override async Task OnInitializedAsync()
     {
-        financialService = new FinancialOperationService(new MyHttpService(client));
         finOperations = await financialService.GetOperations();
-    }  
-    async Task AddFinancialOperation()
+    }
+
+    private async Task RefreshList()
     {
-        await financialService.AddOperation(newFinOperation);
         finOperations = await financialService.GetOperations();
+    }
+
+    async Task AddFinancialOperation(DateTime newDate, string newComment, decimal newAmount)
+    {
+        newFinOperation.Amount = newAmount;
+        newFinOperation.Comment = newComment;
+        newFinOperation.Date = newDate;
+
+        await financialService.AddOperation(newFinOperation);
+        finOperations.Add(newFinOperation);
+        finOperations = await financialService.GetOperations();
+        StateHasChanged();
         newFinOperation = new FinancialOperation();
+    }
+
+    async Task EditFinancialOperation(int id, FinancialOperation finOperation)
+    {
+        editFinOperation = finOperation;
+        editDate = editFinOperation.Date;
+        editAmount = editFinOperation.Amount;
+        editComment = editFinOperation.Comment;
+    }
+
+    async Task UpdateFinancialOperation(int id, DateTime newDate, string newComment, decimal newAmount)
+    {
+        FinancialOperation updatedOperation = new FinancialOperation();
+        updatedOperation.Date = newDate;
+        updatedOperation.Amount = newAmount;
+        updatedOperation.Comment = newComment;
+        updatedOperation.ID = id;
+        await financialService.UpdateOperation(updatedOperation);
+        finOperations = await financialService.GetOperations();
+        editFinOperation = null;
+        updatedOperation = null;
+
+    }
+
+    async Task CancelEditFinancialOperation()
+    {
+        editFinOperation = null;
+    }
+    
+    async Task DeleteFinancialOperation(int id)
+    {
+        await financialService.DeleteOperation(id);
+        finOperations = await financialService.GetOperations();
     }
 }

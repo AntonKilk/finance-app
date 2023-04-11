@@ -1,0 +1,122 @@
+﻿@page "/types"
+
+@using Services.Interfaces;
+@using Services;
+@using MyFinanceLibrary.Models;
+
+<h1>Transaction types</h1>
+
+<div>
+    <h2>Add new type of transaction</h2>
+    <form class="form-group">
+        <label>Transaction name:</label>
+        <input class="form-control" type="text" @bind-value="@newType.Name" />
+        <br />
+        <label for="isIncome">Type:</label>
+        <InputSelect id="isIncome" class="form-control" @bind-Value="@newType.isIncome">
+            <option value="true">Income</option>
+            <option value="false">Expense</option>
+        </InputSelect>
+        <br />
+        <button class="btn btn-primary" @onclick="AddOperationType">Add</button>
+    </form>
+</div>
+
+@if (opTypes == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Income/Expense</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var type in opTypes)
+            {
+                <tr>
+                    <td>@type.Name</td>
+                    <td>@(type.isIncome ? "Income" : "Expense")</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => EditOperationType(type.ID, type)">Edit</button>
+                        <button class="btn btn-primary" @onclick="() => DeleteOperationType(type.ID)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    @if (editOpType != null)
+    {
+        <h2>Edit Transaction Type</h2>
+
+        <form>
+            <div class="form-group">
+                <label for="editDescriptionInput">Transaction name:</label>
+                <input id="editDescriptionInput" class="form-control" type="text" @bind-value="@editOpType.Name" />
+            </div>
+            <div class="form-group">
+                <label for="editIncome">Type:</label>
+                <InputSelect id="editIncome" class="form-control" @bind-Value="@editOpType.isIncome">
+                    <option value="true">Income</option>
+                    <option value="false">Expense</option>
+                </InputSelect>
+            </div>
+            <button class="btn btn-primary" type="button" @onclick="() => UpdateOperationType(editOpType.ID)">Save</button>
+            <button class="btn btn-secondary" type="button" @onclick="CancelEditOperationType">Cancel</button>
+        </form>
+    }
+}
+
+@code {
+
+    static HttpClient client = new HttpClient();
+    OperationTypeService typeService = new OperationTypeService(new MyHttpService(client));
+    List<OperationType> opTypes;
+    OperationType newType = new OperationType();
+    OperationType editOpType;
+
+    protected override async Task OnInitializedAsync()
+    {
+        opTypes = await typeService.GetOperationTypes();
+    }
+
+    async Task AddOperationType()
+    {
+        await typeService.AddOperationType(newType);
+        opTypes.Add(newType);
+        opTypes = await typeService.GetOperationTypes();
+        StateHasChanged();
+        newType = new OperationType();
+    }
+
+    async Task EditOperationType(int id, OperationType opType)
+    {
+        editOpType = opType;
+    }
+
+    async Task UpdateOperationType(int id)
+    {
+        await typeService.UpdateOperationType(id, editOpType);
+        opTypes = await typeService.GetOperationTypes();
+        editOpType = null;
+    }
+
+    async Task CancelEditOperationType()
+    {
+        editOpType = null;
+    }
+
+    async Task DeleteOperationType(int id)
+    {
+        await typeService.DeleteOperationType(id);
+        opTypes = await typeService.GetOperationTypes();
+    }
+
+}

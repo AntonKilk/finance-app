@@ -21,7 +21,7 @@ namespace MyFinanceBlazor.Services
             return JsonSerializer.Deserialize<T>(content, options);
         }
 
-        public async Task<T> PostAsync<T>(string uri, T data)
+        public async Task<T?> PostAsync<T>(string uri, T data)
         {
             var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
 
@@ -30,6 +30,20 @@ namespace MyFinanceBlazor.Services
 
             var responseContent = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<T>(responseContent);
+        }
+
+        public async Task PutAsync<T>(string uri, T data)
+        {
+            var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PutAsync(uri, content);
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task DeleteAsync(string uri)
+        {
+            var response = await _httpClient.DeleteAsync(uri);
+            response.EnsureSuccessStatusCode();
         }
     }
 

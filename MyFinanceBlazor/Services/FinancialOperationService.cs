@@ -1,5 +1,6 @@
 ﻿using MyFinanceLibrary.Models;
 using MyFinanceBlazor.Services.Interfaces;
+using Azure;
 
 namespace MyFinanceBlazor.Services
 {
@@ -27,14 +28,14 @@ namespace MyFinanceBlazor.Services
             return await _httpService.PostAsync<FinancialOperation>("https://localhost:7295/FinancialOperation", operation);
         }
 
-        public async Task<FinancialOperation> UpdateOperation(int id, FinancialOperation operation)
+        public async Task UpdateOperation(FinancialOperation operation)
         {
-            return await _httpService.PostAsync<FinancialOperation>($"https://localhost:7295/FinancialOperation/{id}", operation);
+            await _httpService.PutAsync($"https://localhost:7295/FinancialOperation/{operation.ID}", operation);
         }
 
         public async Task DeleteOperation(int id)
         {
-            await _httpService.PostAsync<object>($"https://localhost:7295/FinancialOperation/delete/{id}", null);
+            await _httpService.DeleteAsync($"https://localhost:7295/FinancialOperation/{id}");
         }
     }
 

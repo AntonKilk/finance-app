@@ -15,7 +15,7 @@ namespace MyFinanceBlazor.Services
         public async Task<Report> GetDailyReport(DateTime date)
         {
             string formattedDate = date.ToString("yyyy-MM-dd");
-            string url = $"https://localhost:7295/Report/daily?date={formattedDate}";
+            string url = $"/Report/daily?date={formattedDate}";
             return await _httpService.GetAsync<Report>(url);
         }
 
@@ -23,7 +23,7 @@ namespace MyFinanceBlazor.Services
         {
             string formattedStartDate = startDate.ToString("yyyy-MM-dd");
             string formattedEndStartDate = endDate.ToString("yyyy-MM-dd");
-            string url = $"https://localhost:7295/Report/period?startDate={formattedStartDate}&endDate={formattedEndStartDate}";
+            string url = $"/Report/period?startDate={formattedStartDate}&endDate={formattedEndStartDate}";
             return await _httpService.GetAsync<Report>(url);
         }
     }

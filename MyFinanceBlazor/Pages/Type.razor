@@ -3,6 +3,7 @@
 @using Services.Interfaces;
 @using Services;
 @using MyFinanceLibrary.Models;
+@inject HttpClient Http
 
 <h1>Transaction types</h1>
 
@@ -58,17 +59,17 @@ else
 
         <form>
             <div class="form-group">
-                <label for="editDescriptionInput">Transaction name:</label>
-                <input id="editDescriptionInput" class="form-control" type="text" @bind-value="@editOpType.Name" />
+                <label for="editNameInput">Transaction name:</label>
+                <input id="editNameInput" class="form-control" type="text" @bind-value="editName" />
             </div>
             <div class="form-group">
                 <label for="editIncome">Type:</label>
-                <InputSelect id="editIncome" class="form-control" @bind-Value="@editOpType.isIncome">
+                <InputSelect id="editIncome" class="form-control" @bind-Value="editIsIncome">
                     <option value="true">Income</option>
                     <option value="false">Expense</option>
                 </InputSelect>
             </div>
-            <button class="btn btn-primary" type="button" @onclick="() => UpdateOperationType(editOpType.ID)">Save</button>
+            <button class="btn btn-primary" type="button" @onclick="() => UpdateOperationType(editOpType.ID, editName, editIsIncome)">Save</button>
             <button class="btn btn-secondary" type="button" @onclick="CancelEditOperationType">Cancel</button>
         </form>
     }
@@ -76,11 +77,13 @@ else
 
 @code {
 
-    static HttpClient client = new HttpClient();
-    OperationTypeService typeService = new OperationTypeService(new MyHttpService(client));
-    List<OperationType> opTypes;
+    //static HttpClient client = new HttpClient();
+    OperationTypeService typeService = new OperationTypeService(new MyHttpService(Http, Http.BaseAddress));
+    List<OperationType>? opTypes;
     OperationType newType = new OperationType();
-    OperationType editOpType;
+    OperationType? editOpType;
+    private string? editName;
+    private bool editIsIncome;
 
     protected override async Task OnInitializedAsync()
     {
@@ -99,13 +102,20 @@ else
     async Task EditOperationType(int id, OperationType opType)
     {
         editOpType = opType;
+        editIsIncome = opType.isIncome;
+        editName = opType.Name;
     }
 
-    async Task UpdateOperationType(int id)
+    async Task UpdateOperationType(int id, string newName, bool newIsIncome)
     {
-        await typeService.UpdateOperationType(id, editOpType);
+        OperationType updatedOpType = new OperationType();
+        updatedOpType.ID = id;
+        updatedOpType.isIncome = newIsIncome;
+        updatedOpType.Name = newName;
+        await typeService.UpdateOperationType(updatedOpType.ID, updatedOpType);
         opTypes = await typeService.GetOperationTypes();
         editOpType = null;
+        updatedOpType = null;
     }
 
     async Task CancelEditOperationType()

@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using MyFinanceBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -6,6 +8,12 @@ string connection = builder.Configuration.GetConnectionString("DefaultConnection
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+var baseAddress = builder.Configuration.GetValue<string>("BaseUrl");
+builder.Services.AddSingleton(new HttpClient
+{
+    BaseAddress = new Uri(baseAddress)
+}
+);
 
 var app = builder.Build();
 

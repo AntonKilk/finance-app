@@ -3,6 +3,8 @@
 @using Services.Interfaces;
 @using Services;
 @using MyFinanceLibrary.Models;
+@inject HttpClient Http
+
 
 <h1>Transactions</h1>
 
@@ -22,7 +24,7 @@
         <button class="btn btn-primary" @onclick="RefreshList">Refresh List</button>
     </form>
 </div>
-
+\
 @if (finOperations == null)
 {
     <p>Loading...</p>
@@ -80,8 +82,7 @@ else
 
 @code {
 
-    static HttpClient client = new HttpClient();
-    FinancialOperationService financialService = new FinancialOperationService(new MyHttpService(client));
+    FinancialOperationService financialService = new FinancialOperationService(new MyHttpService(Http, Http.BaseAddress));
     List<FinancialOperation>? finOperations;
     FinancialOperation newFinOperation = new FinancialOperation();
     FinancialOperation? editFinOperation;

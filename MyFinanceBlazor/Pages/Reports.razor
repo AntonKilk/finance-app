@@ -3,17 +3,19 @@
 @using Services.Interfaces
 @using Services
 @using MyFinanceLibrary.Models
-
+@inject HttpClient Http
 
 <h3>Daily Report</h3>
 <div class="form-group">
     <label for="date">Select Date:</label>
     <input type="date" class="form-control" @bind-value="selectedDate" />
+    <br />
     <button class="btn btn-primary" @onclick="GetDailyReport">Get Report</button>
 </div>
 
 @if (dailyReport != null)
 {
+    <br />
     <h4>Report for @selectedDate.ToShortDateString()</h4>
     <h4>Total income: @report.Income.ToString()</h4>
     <h4>Total expenses: @report.Expenses.ToString()</h4>
@@ -44,11 +46,13 @@
     <input type="date" class="form-control" @bind-value="startDate" />
     <label for="endDate">End Date:</label>
     <input type="date" class="form-control" @bind-value="endDate" />
+    <br />
     <button class="btn btn-primary" @onclick="GetPeriodReport">Get Period Report</button>
 </div>
 
 @if (periodReport != null)
 {
+    <br />
     <h4>Report from @startDate.ToShortDateString() to @endDate.ToShortDateString()</h4>
     <h4>Total income: @report.Income.ToString()</h4>
     <h4>Total expenses: @report.Expenses.ToString()</h4>
@@ -72,9 +76,8 @@
 }
 
 @code {
-
     static HttpClient client = new HttpClient();
-    ReportService reportService = new ReportService(new MyHttpService(client));
+    ReportService reportService = new ReportService(new MyHttpService(client, "https://localhost:7295" ));
     private DateTime selectedDate = DateTime.Today;
     private List<FinancialOperation> dailyReport;
     private DateTime startDate = DateTime.Today.AddDays(-7);

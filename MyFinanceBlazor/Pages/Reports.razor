@@ -3,7 +3,8 @@
 @using Services.Interfaces
 @using Services
 @using MyFinanceLibrary.Models
-@inject HttpClient Http
+
+@inject MyHttpService httpService;
 
 <h3>Daily Report</h3>
 <div class="form-group">
@@ -76,14 +77,18 @@
 }
 
 @code {
-    static HttpClient client = new HttpClient();
-    ReportService reportService = new ReportService(new MyHttpService(client, "https://localhost:7295" ));
+    private IReportService reportService;
     private DateTime selectedDate = DateTime.Today;
     private List<FinancialOperation> dailyReport;
     private DateTime startDate = DateTime.Today.AddDays(-7);
     private DateTime endDate = DateTime.Today;
     private List<FinancialOperation> periodReport;
     private MyFinanceLibrary.Report report = new MyFinanceLibrary.Report();
+
+    protected override void OnInitialized()
+    {
+        reportService = new ReportService(httpService);
+    }
 
     private async Task GetDailyReport()
     {
@@ -94,7 +99,7 @@
     private async Task GetPeriodReport()
     {
         report = await reportService.GetPeriodReport(startDate, endDate);
-        periodReport = report.Operations;   
+        periodReport = report.Operations;
     }
 }
 

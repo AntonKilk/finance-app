@@ -3,7 +3,8 @@
 @using Services.Interfaces;
 @using Services;
 @using MyFinanceLibrary.Models;
-@inject HttpClient Http
+
+@inject MyHttpService httpService;
 
 <h1>Transaction types</h1>
 
@@ -76,9 +77,7 @@ else
 }
 
 @code {
-
-    //static HttpClient client = new HttpClient();
-    OperationTypeService typeService = new OperationTypeService(new MyHttpService(Http, Http.BaseAddress));
+    private IOperationTypeService? typeService;
     List<OperationType>? opTypes;
     OperationType newType = new OperationType();
     OperationType? editOpType;
@@ -87,6 +86,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        typeService = new OperationTypeService(httpService);
         opTypes = await typeService.GetOperationTypes();
     }
 

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MyFinanceBlazor.Services;
+using MyFinanceBlazor.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -8,12 +9,13 @@ string connection = builder.Configuration.GetConnectionString("DefaultConnection
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
 var baseAddress = builder.Configuration.GetValue<string>("BaseUrl");
-builder.Services.AddSingleton(new HttpClient
-{
-    BaseAddress = new Uri(baseAddress)
-}
-);
+builder.Services.AddHttpClient("AntonsConfig", opt => { opt.BaseAddress = new Uri(baseAddress); });
+builder.Services.AddTransient<MyHttpService>();
+builder.Services.AddTransient<IFinancialOperationService, FinancialOperationService>();
+builder.Services.AddTransient<IOperationTypeService, OperationTypeService>();
+builder.Services.AddTransient<IReportService, ReportService>();
 
 var app = builder.Build();
 

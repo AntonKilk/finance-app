@@ -3,8 +3,8 @@
 @using Services.Interfaces;
 @using Services;
 @using MyFinanceLibrary.Models;
-@inject HttpClient Http
 
+@inject MyHttpService httpService;
 
 <h1>Transactions</h1>
 
@@ -56,7 +56,6 @@ else
         </tbody>
     </table>
 
-
     @if (editFinOperation != null)
     {
         <h2>Edit Financial Operation</h2>
@@ -81,8 +80,7 @@ else
 }
 
 @code {
-
-    FinancialOperationService financialService = new FinancialOperationService(new MyHttpService(Http, Http.BaseAddress));
+    private IFinancialOperationService finService;
     List<FinancialOperation>? finOperations;
     FinancialOperation newFinOperation = new FinancialOperation();
     FinancialOperation? editFinOperation;
@@ -93,14 +91,16 @@ else
     private string? editComment;
     private decimal editAmount;
 
+    
     protected override async Task OnInitializedAsync()
     {
-        finOperations = await financialService.GetOperations();
+        finService = new FinancialOperationService(httpService);
+        finOperations = await finService.GetOperations();
     }
 
     private async Task RefreshList()
     {
-        finOperations = await financialService.GetOperations();
+        finOperations = await finService.GetOperations();
     }
 
     async Task AddFinancialOperation(DateTime newDate, string newComment, decimal newAmount)
@@ -109,9 +109,9 @@ else
         newFinOperation.Comment = newComment;
         newFinOperation.Date = newDate;
 
-        await financialService.AddOperation(newFinOperation);
+        await finService.AddOperation(newFinOperation);
         finOperations.Add(newFinOperation);
-        finOperations = await financialService.GetOperations();
+        finOperations = await finService.GetOperations();
         StateHasChanged();
         newFinOperation = new FinancialOperation();
     }
@@ -131,8 +131,8 @@ else
         updatedOperation.Amount = newAmount;
         updatedOperation.Comment = newComment;
         updatedOperation.ID = id;
-        await financialService.UpdateOperation(updatedOperation);
-        finOperations = await financialService.GetOperations();
+        await finService.UpdateOperation(updatedOperation);
+        finOperations = await finService.GetOperations();
         editFinOperation = null;
         updatedOperation = null;
 
@@ -145,7 +145,7 @@ else
     
     async Task DeleteFinancialOperation(int id)
     {
-        await financialService.DeleteOperation(id);
-        finOperations = await financialService.GetOperations();
+        await finService.DeleteOperation(id);
+        finOperations = await finService.GetOperations();
     }
 }

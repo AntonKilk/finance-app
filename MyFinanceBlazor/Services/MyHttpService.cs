@@ -1,25 +1,24 @@
 ﻿using System.Text.Json;
 using System.Text;
-using Microsoft.Extensions.Configuration;
-using System.Net.Http;
 
 namespace MyFinanceBlazor.Services
 {
     public class MyHttpService
     {
-        private readonly HttpClient _httpClient;
-        private readonly string _mainUrl;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public MyHttpService(HttpClient httpClient, string mainUrl)
+        public MyHttpService(IHttpClientFactory httpClientFactory)
         {
-            _httpClient = httpClient;
-            _mainUrl = mainUrl;
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task<T> GetAsync<T>(string uri)
         {
-            var response = await _httpClient.GetAsync(_mainUrl + uri);
+            var client = _httpClientFactory.CreateClient("AntonsConfig");
+
+            var response = await client.GetAsync(uri);
             response.EnsureSuccessStatusCode();
+
             var options = new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
             var content = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<T>(content, options);
@@ -27,9 +26,11 @@ namespace MyFinanceBlazor.Services
 
         public async Task<T?> PostAsync<T>(string uri, T data)
         {
+            var client = _httpClientFactory.CreateClient("AntonsConfig");
+
             var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync(_mainUrl + uri, content);
+            var response = await client.PostAsync(uri, content);
             response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -38,15 +39,19 @@ namespace MyFinanceBlazor.Services
 
         public async Task PutAsync<T>(string uri, T data)
         {
+            var client = _httpClientFactory.CreateClient("AntonsConfig");
+
             var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PutAsync(_mainUrl + uri, content);
+            var response = await client.PutAsync(uri, content);
             response.EnsureSuccessStatusCode();
         }
 
         public async Task DeleteAsync(string uri)
         {
-            var response = await _httpClient.DeleteAsync(_mainUrl + uri);
+            var client = _httpClientFactory.CreateClient("AntonsConfig");
+
+            var response = await client.DeleteAsync(uri);
             response.EnsureSuccessStatusCode();
         }
     }

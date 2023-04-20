@@ -20,7 +20,7 @@ Tech used:
 -.NET Web Api
 - Entity Framework
 - ASP.NET Core (Blazor server-side app)
-- SQL Server.
+- MS SQL Server.
 
 Plans to add: CSV file uploader.
 

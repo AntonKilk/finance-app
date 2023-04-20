@@ -16,7 +16,12 @@ How to use:
 2. Open in Visual Studio or other IDE.
 2. Run projects "MyFinanceApp" + "MyFinanceBlazor" together.
 
-Tech used: .NET Web Api + Entity Framework, ASP.NET Core(Blazor server-side app), SQL Server.
+Tech used: 
+-.NET Web Api
+- Entity Framework
+- ASP.NET Core (Blazor server-side app)
+- SQL Server.
+
 Plans to add: CSV file uploader.
 
 License: MIT

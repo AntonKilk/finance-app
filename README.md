@@ -7,7 +7,9 @@ App for calculating transactions from bank:
 - Reports for date or period.
 - Total income, total expenses for period.
 
-[]
+![types](https://github.com/AntonKilk/finance-app/blob/main/imgs/types.png)
+![transactions](https://github.com/AntonKilk/finance-app/blob/main/imgs/transactions.png)
+![report](https://github.com/AntonKilk/finance-app/blob/main/imgs/report.png)
 
 How to use:
 1. Clone the project.

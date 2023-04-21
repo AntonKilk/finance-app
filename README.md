@@ -14,10 +14,11 @@ App for calculating transactions from bank:
 How to use:
 1. Clone the project.
 2. Open in Visual Studio or other IDE.
-2. Run projects "MyFinanceApp" + "MyFinanceBlazor" together.
+3. Install NuGet packages (I used Entity Framework and Sql Server)
+4. Run projects "MyFinanceApp" + "MyFinanceBlazor" together.
 
 Tech used: 
--.NET Web Api
+-.NET Core Web Api
 - Entity Framework
 - ASP.NET Core (Blazor server-side app)
 - MS SQL Server.
